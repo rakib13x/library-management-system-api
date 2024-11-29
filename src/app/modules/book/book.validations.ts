@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Define the schema to validate incoming book creation data
 const createBook = z.object({
   body: z.object({
     title: z.string({
@@ -27,6 +26,26 @@ const createBook = z.object({
   }),
 });
 
+const updateBook = z.object({
+  body: z.object({
+    title: z.string().optional(),
+    genre: z.string().optional(),
+    publishedYear: z
+      .number()
+      .min(1000, "Published Year must be a valid year")
+      .optional(),
+    totalCopies: z
+      .number()
+      .min(1, "Total Copies must be at least 1")
+      .optional(),
+    availableCopies: z
+      .number()
+      .min(0, "Available Copies cannot be negative")
+      .optional(),
+  }),
+});
+
 export const BookValidation = {
   createBook,
+  updateBook,
 };
