@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../errors/ApiError";
 
-const createBook = async (payload: any) => {
+const createBookIntoDb = async (payload: any) => {
   const { title, genre, publishedYear, totalCopies, availableCopies } = payload;
 
   const existingBook = await prisma.book.findFirst({
@@ -29,6 +29,17 @@ const createBook = async (payload: any) => {
   return newBook;
 };
 
+const getAllBooksFromDb = async () => {
+  const books = await prisma.book.findMany({
+    orderBy: {
+      publishedYear: "desc",
+    },
+  });
+
+  return books;
+};
+
 export const BookService = {
-  createBook,
+  createBookIntoDb,
+  getAllBooksFromDb,
 };
