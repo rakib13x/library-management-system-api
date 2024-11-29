@@ -39,7 +39,20 @@ const getAllBooksFromDb = async () => {
   return books;
 };
 
+const getSingleBookFromDb = async (bookId: string) => {
+  const book = await prisma.book.findUnique({
+    where: { bookId },
+  });
+
+  if (!book) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Book not found");
+  }
+
+  return book;
+};
+
 export const BookService = {
   createBookIntoDb,
   getAllBooksFromDb,
+  getSingleBookFromDb,
 };
