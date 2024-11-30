@@ -37,7 +37,56 @@ const getAllMembersFromDb = async () => {
   return members;
 };
 
+const getMemberByIdFromDb = async (memberId: string) => {
+  const member = await prisma.member.findUnique({
+    where: { memberId },
+  });
+
+  if (!member) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Member not found");
+  }
+
+  return member;
+};
+
+const updateMemberIntoDb = async (
+  memberId: string,
+  updateData: Partial<any>
+) => {
+  const member = await prisma.member.findUnique({
+    where: { memberId },
+  });
+
+  if (!member) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Member not found");
+  }
+
+  const updatedMember = await prisma.member.update({
+    where: { memberId },
+    data: updateData,
+  });
+
+  return updatedMember;
+};
+
+const deleteMemberFromDb = async (memberId: string) => {
+  const member = await prisma.member.findUnique({
+    where: { memberId },
+  });
+
+  if (!member) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Member not found");
+  }
+
+  await prisma.member.delete({
+    where: { memberId },
+  });
+};
+
 export const MemberService = {
   createMemberIntoDb,
   getAllMembersFromDb,
+  getMemberByIdFromDb,
+  updateMemberIntoDb,
+  deleteMemberFromDb,
 };

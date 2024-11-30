@@ -11,5 +11,12 @@ router.post(
   MemberController.createMember
 );
 router.get("/", MemberController.getAllMembers);
+router.get("/:memberId", MemberController.getMemberById);
+router.patch(
+  "/:memberId",
+  validateRequest(MemberValidation.updateMember),
+  MemberController.updateMember
+);
+router.delete("/:memberId", MemberController.deleteMember);
 
 export const MemberRoutes = router;

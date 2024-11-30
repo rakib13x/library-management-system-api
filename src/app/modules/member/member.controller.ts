@@ -27,7 +27,49 @@ const getAllMembers = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMemberById = catchAsync(async (req: Request, res: Response) => {
+  const { memberId } = req.params;
+  const member = await MemberService.getMemberByIdFromDb(memberId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Member retrieved successfully",
+    data: member,
+  });
+});
+
+const updateMember = catchAsync(async (req: Request, res: Response) => {
+  const { memberId } = req.params;
+  const updateData = req.body;
+  const updatedMember = await MemberService.updateMemberIntoDb(
+    memberId,
+    updateData
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Member updated successfully",
+    data: updatedMember,
+  });
+});
+
+const deleteMember = catchAsync(async (req: Request, res: Response) => {
+  const { memberId } = req.params;
+  await MemberService.deleteMemberFromDb(memberId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Member successfully deleted",
+  });
+});
+
 export const MemberController = {
   createMember,
   getAllMembers,
+  getMemberById,
+  updateMember,
+  deleteMember,
 };

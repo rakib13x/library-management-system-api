@@ -24,6 +24,15 @@ const createMember = z.object({
   }),
 });
 
+const updateMember = z.object({
+  body: z.object({
+    name: z.string().optional(),
+    email: z.string().email("Invalid email format").optional(),
+    phone: z.string().optional(),
+  }),
+});
+
 export const MemberValidation = {
   createMember,
+  updateMember,
 };
