@@ -1,6 +1,6 @@
+import httpStatus from "http-status";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../errors/ApiError";
-import httpStatus from "http-status";
 
 const borrowBook = async (bookId: string, memberId: string) => {
   const book = await prisma.book.findUnique({ where: { bookId } });
@@ -47,4 +47,32 @@ const returnBook = async (borrowId: string) => {
   });
 };
 
-export const BorrowService = { borrowBook, returnBook };
+const getOverdueBorrows = async () => {
+  const currentDate = new Date();
+  const overdueBorrowRecords = await prisma.borrowRecord.findMany({
+    where: {
+      returnDate: null,
+      borrowDate: {
+        lt: new Date(currentDate.setDate(currentDate.getDate() - 14)),
+      },
+    },
+    include: {
+      book: { select: { title: true } },
+      member: { select: { name: true } },
+    },
+  });
+
+  const overdueList = overdueBorrowRecords.map((record) => ({
+    borrowId: record.borrowId,
+    bookTitle: record.book.title,
+    borrowerName: record.member.name,
+    overdueDays: Math.floor(
+      (new Date().getTime() - record.borrowDate.getTime()) /
+        (1000 * 60 * 60 * 24) -
+        14
+    ),
+  }));
+
+  return overdueList;
+};
+export const BorrowService = { borrowBook, returnBook, getOverdueBorrows };
