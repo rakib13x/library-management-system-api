@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req: Request, res: Response) => {
   res.send({
-    Message: "Hello,from book library api",
+    Message: "Hello",
   });
 });
 

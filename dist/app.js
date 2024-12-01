@@ -16,7 +16,7 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
     res.send({
-        Message: "Hello,from book library api",
+        Message: "Hello",
     });
 });
 app.use("/api", routes_1.default);
